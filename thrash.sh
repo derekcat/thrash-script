@@ -30,10 +30,9 @@ random_sleep ()
 }
 
 # Arugment processing
-while getopts ":h:p:s:t" opt; do
-	case $opt in
+while getopts ":hp:s:t:" option; do
+	case $option in
 		h)
-			nothing="$OPTARG"
 			help
 			exit
 			;;
@@ -47,12 +46,11 @@ while getopts ":h:p:s:t" opt; do
 			;;
 		t)
 			max_seconds="$OPTARG"
-			echo "Max time between operations set to $thrash_path seconds"
+			echo "Max time between operations set to $max_seconds seconds"
 			;;
-		\?)
-			echo "ERROR!  Unsupported argument flag $1!  Exiting..."
+		*)
 			help
-			exit 1
+			exit
 	esac
 done		
 
