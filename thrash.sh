@@ -3,9 +3,11 @@
 
 # Variables
 thrash_path="/var/thrash" # No trailing slash
+declare -i max_seconds
 max_seconds=60 # Between operations
+declare -i thrash_size
 thrash_size=1 # How much space to use in GB
-let thrash_seq_end=$thrash_size*19 # Convert GB into how many thrash files we need to create
+declare -i thrash_seq_end
 
 # Functions
 help ()
@@ -28,11 +30,12 @@ random_sleep ()
 }
 
 # Arugment processing
-while getopts ":h:p:s:t::" opt; do
+while getopts ":h:p:s:t" opt; do
 	case $opt in
 		h)
+			nothing="$OPTARG"
 			help
-			exit 1
+			exit
 			;;
 		p)
 			thrash_path="$OPTARG"
@@ -46,11 +49,15 @@ while getopts ":h:p:s:t::" opt; do
 			max_seconds="$OPTARG"
 			echo "Max time between operations set to $thrash_path seconds"
 			;;
-		*)
+		\?)
 			echo "ERROR!  Unsupported argument flag $1!  Exiting..."
+			help
 			exit 1
 	esac
 done		
+
+# Define calculated variables AFTER argument processing
+let thrash_seq_end="$thrash_size*19" # Convert GB into how many thrash files we need to create
 
 # Main execution code
 echo "###########################################################################"
